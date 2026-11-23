@@ -1,0 +1,42 @@
+<form method="get">
+    <h2>Search for products:</h2>
+    <input type="text" name="p" value="{{ p }}">
+    <h2>Categories:</h2>
+    {% for category in categories %}
+        <br>
+        <label>
+            <input type="checkbox" name="cats" value="{{ category.id }}"
+                {% if category.id|stringformat:"s" in selected_cats %}checked{% endif %}>
+            {{ category.name }}
+        </label>
+    {% endfor %}
+
+    <h2>Tags:</h2>
+    {% for tag in tags %}
+        <br>
+        <label>
+            <input type="checkbox" name="tags" value="{{ tag.id }}"
+                {% if tag.id|stringformat:"s" in selected_tags %}checked{% endif %}>
+            {{ tag.name }}
+        </label>
+    {% endfor %}
+    <br>
+    <button type="submit">Filter</button>
+    <br>
+    <a href="{% url 'main_page' %}">Clear filters</a>
+</form>
+
+<p>{{ prods|length }} result(s)</p>
+ 
+{% if prods %}
+  <ul>
+    {% for prod in prods %}
+      <li>
+        {{ prod.name }} ({{ prod.category}}): {{ prod.description }}
+        {% for tag in prod.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No products match.</p>
+{% endif %}
